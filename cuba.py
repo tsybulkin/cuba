@@ -5,6 +5,7 @@
 import numpy as np
 import cPickle
 import sys, os
+from train import train_epoch
 
 
 def run(t=5):
@@ -17,7 +18,7 @@ def run(t=5):
 
 
 def train(epoch=1000, t=5):
-	## load Qtab
+	Qtab = load_Qtab()
 
 	for ep in xrange(epoch):
 		if ep % 100 == 0:
@@ -34,7 +35,7 @@ def train(epoch=1000, t=5):
 
 def load_Qtab():
 	if not os.path.isfile('Qtab.data'):
-		return "initialize Qtab"
+		return {}
 
 	f = open("Qtab.data",'b')
 	Qtab = cPickle.load(f)
@@ -60,7 +61,12 @@ for demo: python cuba.py demo t
 		print warning
 
 	elif args[1] == 'train':
-		pass
+		if len(args) == 4:
+			epoch = int(args[2])
+			t = float(args[3])
+			train(epoch=epoch, t=t)
+		else:
+			print warning
 
 	elif args[1] == 'demo':
 		pass

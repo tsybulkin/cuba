@@ -2,6 +2,7 @@
 #
 from state import x_to_state, learn, get_policy
 from dynamics import dynamics, control
+import numpy as np
 
 
 TAU = 0.01
@@ -12,16 +13,17 @@ def train_epoch(T, Qtab):
 	"""
 	t = 0.
 	x = np.array([np.pi/4, 0., 0.])
-
+	state = x_to_state(x)
+		
 	while t < T:
-		state = x_to_state(x)
-		print "t:", t, "\tstate", state
-		action = get_policy(state, Qtab)
+		#print "t:", t, "\tstate", state
+		action = get_policy(state, Qtab, eps=0.3)
 		u = control(action)
 
-		x1 = dynamics(x, u, TAU)
-		print 'x:', x1
-		state1 = x_to_state(x1)
+		x = dynamics(x, u, TAU)
+		#print "action:", action, '\tx:', x
+		state1 = x_to_state(x)
 		learn(state, action, state1, Qtab)
+		state = state1
 
 		t += TAU
