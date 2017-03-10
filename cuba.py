@@ -25,17 +25,19 @@ def train(epoch=1000, t=5):
 
 		train_epoch(t, Qtab)
 
-	## dump Qtab
+	f = open("Qtab.data",'wr')
+	cPickle.dump(Qtab, f)
+	f.close
 
 	return Qtab
 
 
 def load_Qtab():
-	if not os.path('Qtab.data'):
+	if not os.path.isfile('Qtab.data'):
 		return "initialize Qtab"
 
-	with open("Qtab.data",'b') as f:
-		Qtab = cPickle.load(f)
+	f = open("Qtab.data",'b')
+	Qtab = cPickle.load(f)
 	f.close()
 
 	return Qtab
