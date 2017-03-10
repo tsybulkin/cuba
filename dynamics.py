@@ -1,6 +1,7 @@
 #
 # This module provides modeling the cubli-like robot
 #
+import numpy as np
 
 Mb = 1. 	# the mass of cube body
 Md = 0.5	# the mass of the balancing disc
@@ -20,3 +21,15 @@ def dynamics(x, u, tau):
 	d2a/dt2 = L*G*sin(a) + L/(Mb+Md)*K*u
 	Md*R^2*dw/dt = K*u
 	"""
+	a, da, w = x
+	
+	d2a = L * G * np.sin(a) + L * K / (Mb + Md) * u
+	da += d2a * tau
+	a += da * tau
+
+	w += K / Md / R**2 * u
+
+	return np.array([a, da, w])
+
+
+	

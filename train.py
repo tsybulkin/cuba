@@ -20,6 +20,7 @@ def train_epoch(T, Qtab):
 		u = control(action)
 
 		x1 = dynamics(x, u, TAU)
+		print 'x:', x1
 		state1 = x_to_state(x1)
 		learn(state, action, state1, Qtab)
 
