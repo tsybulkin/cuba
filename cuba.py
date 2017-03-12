@@ -5,20 +5,23 @@
 import numpy as np
 import cPickle
 import sys, os
-from train import train_epoch
+from train import train_epoch, demo
+from matplotlib import pyplot as plt
 
 
 def run(t=5):
-	## load Qtab
+	Qtab = load_Qtab()
 
-	data = demo(t=5)
-	[t, a, a1, w, u] = zip(*data)
-
-	## show graphs
+	data = demo(t, Qtab)
+	[T, A, A1, W, U] = zip(*data)
+	
+	plt.plot(T,A,'-')
+	plt.show()
 
 
 def train(epoch=1000, t=5):
 	Qtab = load_Qtab()
+	se = len(Qtab)
 
 	for ep in xrange(epoch):
 		if ep % 100 == 0:
@@ -26,7 +29,8 @@ def train(epoch=1000, t=5):
 
 		train_epoch(t, Qtab)
 
-	f = open("Qtab.data",'wr')
+	print len(Qtab)-se, "new states-actions explored" 
+	f = open("Qtab.data",'wb')
 	cPickle.dump(Qtab, f)
 	f.close
 
@@ -37,7 +41,7 @@ def load_Qtab():
 	if not os.path.isfile('Qtab.data'):
 		return {}
 
-	f = open("Qtab.data",'b')
+	f = open("Qtab.data",'rb')
 	Qtab = cPickle.load(f)
 	f.close()
 
@@ -56,6 +60,7 @@ for training: python cuba.py train n t
 for demo: python cuba.py demo t
 	where: t = time of simulation, default value 5 sec
 	"""
+	np.random.seed()
 
 	if len(args) == 1:
 		print warning
@@ -69,8 +74,11 @@ for demo: python cuba.py demo t
 			print warning
 
 	elif args[1] == 'demo':
-		pass
-
+		if len(args) == 3:
+			t = float(args[2])
+			run(t)
+		else:
+			print warning
 	else:
 		print warning
 
