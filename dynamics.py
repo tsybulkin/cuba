@@ -2,6 +2,8 @@
 # This module provides modeling the cubli-like robot
 #
 import numpy as np
+from matplotlib import pyplot as plt
+
 
 Mb = 1. 	# the mass of cube body
 Md = 0.5	# the mass of the balancing disc
@@ -11,6 +13,43 @@ R = 0.1		# the disc radius
 K = 1. 		# the torque parameter
 Wmax = 3000	# the maximum angular velosity of the disk
 Z = 0.5		# torque parameter
+
+
+def run(T):
+	a, da, w = np.pi/4, 0., np.sqrt(2*(L-L/np.sqrt(2))*(Md+Mb)*G/Md/R**2)
+	t, tau = 0., 0.001
+	u = -55.
+	log = []
+
+	while t < T:
+		a,da,w = dynamics((a,da,w), u , tau)
+		print w
+		if w < 0:
+			u = 0.
+		log.append((t,a,da,w,u))
+		t += tau
+
+	show(log)
+
+
+def show(log):
+	[T,A,dA,W,U] = zip(*log)
+	# Two subplots, the axes array is 1-d
+	plt.figure(1)
+	plt.title('simulation results')
+	plt.subplot(311)
+	plt.ylabel('angle')
+	plt.plot(T,A,'b-')
+
+	plt.subplot(312)
+	plt.ylabel('wheel rotation')
+	plt.plot(T,W,'r--')
+
+	plt.subplot(313)
+	plt.ylabel('robot control')
+	plt.plot(T,U,'k')
+
+	plt.show()
 
 
 def control(action):
@@ -24,7 +63,7 @@ def dynamics(x, u, tau):
 	"""
 	a, da, w = x
 	
-	d2a = G / L * np.sin(a) + K / ((Mb + Md) * L**2) * u
+	d2a = (np.sqrt(2.)*(Md + Mb)*G * L * np.sin(a) + K*u) / (2.5*Mb + 2*Md) / L**2 
 	da += d2a * tau
 	a += da * tau
 	if a < -np.pi/4:
@@ -38,4 +77,5 @@ def dynamics(x, u, tau):
 
 	return np.array([a, da, w])
 
-
+if __name__ == "__main__":
+	run(1)
