@@ -11,7 +11,7 @@ LRATE = 0.3
 
 def x_to_state(x):
 	"""digitize continious x"""
-	return np.int32(x * np.array([15, 15, 0.03]))
+	return np.int32(x[:2] * np.array([15, 15]))
 
 
 def get_legal_actions(state):

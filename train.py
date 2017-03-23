@@ -16,14 +16,11 @@ def demo(T, Qtab):
 	log = []
 		
 	while t < T:
-		print "t:", t, "\tstate", state
 		action = get_policy(state, Qtab, eps=0.2)
 		u = control(action)
 
 		x = dynamics(x, u, TAU)
-		print "action:", action
 		state1 = x_to_state(x)
-		print "reward:", learn(state, action, state1, Qtab)
 		state = state1
 
 		log.append((t,)+tuple(x)+(u,))
