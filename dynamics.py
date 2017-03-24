@@ -23,7 +23,6 @@ def run(T):
 
 	while t < T:
 		a,da,w = dynamics((a,da,w), u , tau)
-		print w
 		if w < 0:
 			u = 0.
 		log.append((t,a,da,w,u))

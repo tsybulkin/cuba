@@ -15,7 +15,23 @@ def run(t=5):
 	data = demo(t, Qtab)
 	[T, A, A1, W, U] = zip(*data)
 	
-	plt.plot(T,A,'-')
+	# plt.title()
+	# plt.plot(T,A,'-')
+	# plt.show()
+	plt.figure(1)
+	plt.title('simulation results')
+	plt.subplot(311)
+	plt.ylabel('angle')
+	plt.plot(T,A,'b-')
+
+	plt.subplot(312)
+	plt.ylabel('wheel rotation')
+	plt.plot(T,W,'r--')
+
+	plt.subplot(313)
+	plt.ylabel('robot control')
+	plt.plot(T,U,'k')
+
 	plt.show()
 
 
